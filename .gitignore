@@ -1,8 +1,7 @@
 ./tools/class2/*
 ./tools/changeAttr2file.py
 ./tools/concatMooringUV_4plotting.py
-./tools/moveOutput.py
+./tools/movmv eOutput.py
 ./tools/plot_cl2.py
 ./tools/plot_cl4.py
 ./tools/plot_debugging.py
-./auxiliary_data/mesh_mask_BS-PHD.nc
