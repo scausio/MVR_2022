@@ -1,0 +1,195 @@
+metadata:
+  version: 1
+sources:
+  argo_cora:
+    description: ARGO profiles
+    driver: pqtool.drivers.ArgoCORASource
+#    driver: pqtool.drivers.ArgoSource
+    metadata:
+      coords:
+        latitude: LATITUDE
+        longitude: LONGITUDE
+        depth: N_LEVELS
+        dc_reference: DC_REFERENCE
+        time: JULD
+      variables:
+        temperature: TEMP
+        temperature_qc: TEMP_QC
+        salinity: PSAL
+        salinity_qc: PSAL_QC
+        pressure_qc: PRES_QC
+        time_qc: JULD_QC
+    args:
+      urlpath: '/data/inputs/metocean/historical/obs/in_situ/REP/GlobOce/CORA_Glo/{date:%Y}/CO_DMQCGL01_{date:%Y%m%d}_PR_PF.nc'
+
+  argo:
+    description: ARGO profiles
+    driver: pqtool.drivers.ArgoSource
+    metadata:
+      coords:
+        latitude: LATITUDE
+        longitude: LONGITUDE
+        depth: DEPTH
+        dc_reference: DC_REFERENCE
+        time: TIME
+      variables:
+        temperature: TEMP
+        temperature_qc: TEMP_QC
+        salinity: PSAL
+        salinity_qc: PSAL_QC
+        pressure_qc: PRES_QC
+        time_qc: TIME_QC
+    args:
+      urlpath: '/data/inputs/metocean/historical/obs/in_situ/latest/BlackSea/multiparameter/{date:%Y%m%d}/GL_PR_PF_{platform_code:d}_{date:%Y%m%d}.nc'
+
+  sst:
+    description: L3S GHRSST nighttime subskin SST
+    driver: pqtool.drivers.SSTSource
+    metadata:
+      coords:
+        latitude: lat
+        longitude: lon
+        time: time
+      variables:
+        temperature: adjusted_sea_surface_temperature
+        temperature_qc: quality_level
+    args:
+      urlpath: '/data/inputs/metocean/historical/obs/satellite/SST/CNR/L3/day/{date:%Y}/{date:%m}/{date:%Y%m%d}000000-GOS-L3S_GHRSST-SSTsubskin-night_SST_HR_NRT-BLK-v02.0-fv01.0.nc'
+
+  sst_L4_REP:
+    description: L4S GHRSST nighttime subskin SST
+    driver: pqtool.drivers.SSTSource
+    metadata:
+      coords:
+        latitude: lat
+        longitude: lon
+        time: time
+      variables:
+        temperature: analysed_sst
+        temperature_qc: mask
+        error: analysis_error
+    args:
+      urlpath: '/data/inputs/metocean/historical/obs/satellite/SST/CNR/L4/day/{date:%Y}/{date:%m}/{date:%Y%m%d}000000-GOS-L4_GHRSST-SSTfnd-OISST_HR_REP-BLK-v02.0-fv03.0.nc'
+
+  sst_L4_NRT:
+    description: L4S GHRSST nighttime subskin SST
+    driver: pqtool.drivers.SSTSource
+    metadata:
+      coords:
+        latitude: lat
+        longitude: lon
+        time: time
+      variables:
+        temperature: analysed_sst
+        temperature_qc: mask
+        error: analysis_error
+    args:
+      urlpath: '/data/inputs/metocean/historical/obs/satellite/SST/CNR/L4/day/{date:%Y}/{date:%m}/{date:%Y%m%d}000000-GOS-L4_GHRSST-SSTfnd-OISST_HR_NRT-BLK-v02.0-fv02.0.nc'
+
+  sla:
+    description: Sea Level Anomaly
+    driver: pqtool.drivers.SLASource
+    metadata:
+      coords:
+        latitude: latitude
+        longitude: longitude
+        time: time
+        cycle: cycle
+        track: track
+      variables:
+        sla: sla_filtered
+    args:
+      urlpath: '/data/inputs/metocean/shared_MedBS/SLA_EIS_202112/nrt_{region}_{satellite}_phy_l3_{date:%Y%m%d}.nc'
+
+  moor_tracer:
+    description: Mooring
+    driver: pqtool.drivers.MooringSource
+    metadata:
+      coords:
+        latitude: LATITUDE
+        longitude: LONGITUDE
+        depth: DEPTH
+        dc_reference: DC_REFERENCE
+        time: TIME
+      variables:
+        temperature: TEMP
+        salinity: PSAL
+        ssh: SSH 
+        u: U
+        v: V
+    args:
+      urlpath: '/data/inputs/metocean/historical/obs/in_situ/monthly/BlackSea/multiparameter/mooring/{ref_date:%Y%m}/BS_TS_MO_{plat_name}_{ref_date:%Y%m}.nc'
+
+  cl4_fc_0:
+      description: class 4 fc0
+      driver: pqtool.drivers.NemoSource
+      metadata: &metadata_cl4
+        coords:
+          latitude: nav_lat
+          longitude: nav_lon
+          depth: deptht
+          time: time_counter
+        variables:
+          temperature: votemper
+          salinity: vosaline
+          ssh: sossheig
+      args:
+        urlpath: '/work/opa/bsfs-dev/MVR_2022/output/ts_cl4/fc_0/t_{date:%Y%m%d}_dm_CMCC_BSFS1b_BLKSEA_b{p_date:%Y%m%d}_an12-v01.nc'
+
+  cl4_fc_1:
+    description: class 4 fc1
+    driver: pqtool.drivers.NemoSource
+    metadata: *metadata_cl4
+    args:
+      urlpath: '/work/opa/bsfs-dev/MVR_2022/output/ts_cl4/fc_1/t_{date:%Y%m%d}_dm_CMCC_BSFS1b_BLKSEA_b{p_date:%Y%m%d}_fc12-v01.nc'
+  cl4_fc_3:
+    description: class 4 fc3
+    driver: pqtool.drivers.NemoSource
+    metadata: *metadata_cl4
+    args:
+      urlpath: '/work/opa/bsfs-dev/MVR_2022/output/ts_cl4/fc_3/t_{date:%Y%m%d}_dm_CMCC_BSFS1b_BLKSEA_b{p_date:%Y%m%d}_fc12-v01.nc'
+  cl4_fc_5:
+    description: class 4 fc5
+    driver: pqtool.drivers.NemoSource
+    metadata: *metadata_cl4
+    args:
+      urlpath: '/work/opa/bsfs-dev/MVR_2022/output/ts_cl4/fc_5/t_{date:%Y%m%d}_dm_CMCC_BSFS1b_BLKSEA_b{p_date:%Y%m%d}_fc12-v01.nc'
+
+  cl2_fc_0:
+    description: class 2 fc0
+    driver: pqtool.drivers.NemoSource
+    metadata: &metadata_cl2
+        coords:
+          latitude: nav_lat
+          longitude: nav_lon
+          depth: deptht
+          time: time_counter
+        variables:
+          temperature: votemper
+          salinity: vosaline
+          ssh: sossheig
+          u: vozocrtx
+          v: vomecrty
+    args:
+        urlpath: '/work/opa/bsfs-dev/MVR_2022/output/ts_cl2/fc_0/t_{date:%Y%m%d}_hm_CMCC_BSFS1b_BLKSEA_b{p_date:%Y%m%d}_an12-v01.nc'
+
+  cl2_fc_1:
+    description: class 2 fc1
+    driver: pqtool.drivers.NemoSource
+    metadata: *metadata_cl2
+    args:
+      urlpath: '/work/opa/bsfs-dev/MVR_2022/output/ts_cl2/fc_1/t_{date:%Y%m%d}_hm_CMCC_BSFS1b_BLKSEA_b{p_date:%Y%m%d}_fc12-v01.nc'
+
+  cl2_fc_3:
+    description: class 2 fc3
+    driver: pqtool.drivers.NemoSource
+    metadata: *metadata_cl2
+    args:
+      urlpath: '/work/opa/bsfs-dev/MVR_2022/output/ts_cl2/fc_3/t_{date:%Y%m%d}_hm_CMCC_BSFS1b_BLKSEA_b{p_date:%Y%m%d}_fc12-v01.nc'
+
+  cl2_fc_5:
+    description: class 2 fc5
+    driver: pqtool.drivers.NemoSource
+    metadata: *metadata_cl2
+    args:
+      urlpath: '/work/opa/bsfs-dev/MVR_2022/output/ts_cl2/fc_5/t_{date:%Y%m%d}_hm_CMCC_BSFS1b_BLKSEA_b{p_date:%Y%m%d}_fc12-v01.nc'

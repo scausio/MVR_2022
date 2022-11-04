@@ -1,0 +1,125 @@
+dimensions:
+  areas: 1
+  string_length: 21
+  depths: 10
+  forecasts: 4
+  metrics: 7
+  time: 0
+  surface: 1
+
+variables:
+  area_names:
+    datatype: c
+    coords: [areas, string_length]
+    varAttributes:
+      long_name: "area names"
+      description: "region over which statistics are aggregated"
+    value:
+    - "Full domain          "
+  depths:
+    datatype: f
+    coords: depths
+    varAttributes:
+      long_name: "depths"
+      positive: "down"
+      units: "m"
+      description: "depth of the base of the vertical layer over which statistics are aggregated"
+    value:
+      - 5
+      - 10
+      - 20
+      - 30
+      - 50
+      - 75
+      - 100
+      - 200
+      - 500
+      - 1000
+  forecasts:
+    datatype: f
+    coords: forecasts
+    varAttributes:
+      long_name: "forecast lead time"
+      units: "hours"
+    value:
+      - -12
+      - 12
+      - 60
+      - 108
+  metric_names:
+    datatype: c
+    coords: [metrics, string_length]
+    varAttributes:
+      long_name: "metric names"
+    value:
+      - "number of data values"
+      - "mean of product      "
+      - "mean of reference    "
+      - "mean squared error   "
+      - "variance of product  "
+      - "variance of reference"
+      - "covariance           "
+  stats_salinity:
+    infile: '/work/opa/ls15717/mvr/intermediate/mvr_{mod_type}_argo_{date}.nc'
+    datatype: f
+    coords: [time, forecasts, depths, metrics, areas]
+    varAttributes:
+      parameter: "Salinity"
+      reference: "Profile observations from in-situ TAC"
+      units: "1e-3"
+  stats_sst:
+    infile: '/work/opa/ls15717/mvr/intermediate/mvr_{mod_type}_sst_{date}.nc'
+    datatype: f
+    coords: [time, forecasts, surface, metrics, areas]
+    varAttributes:
+      parameter: "Sea Surface Temperature"
+      reference: "SST L3 from OSI TAC"
+      units: "K"
+  stats_sla:
+    infile: '/work/opa/ls15717/mvr/intermediate/mvr_{mod_type}_sla_{date}.nc'
+    datatype: f
+    coords: [time, forecasts, surface, metrics, areas]
+    varAttributes:
+      parameter: "Sea Level Anomaly"
+      reference: "SLA along track from SLA TAC"
+      units: "cm"
+  stats_temperature:
+    infile: '/work/opa/ls15717/mvr/intermediate/mvr_{mod_type}_argo_{date}.nc'
+    datatype: f
+    coords: [time, forecasts, depths, metrics, areas]
+    varAttributes:
+      parameter: "Temperature"
+      reference: "Profile observations from in-situ TAC"
+      units: "K"
+  time:
+    datatype: f
+    coords: time
+    varAttributes:
+      long_name: "validity time"
+
+forecasts:
+  fc_0:
+    filename: 't_{date}_dm_CMCC_BSEAS4_BLKSEA_b*_an12-v02.nc'
+    fcday: an
+    in_dir: '/data/products/BSFS/bsfs_v4.1/analysis_daily_means/{year}/{month}/{year}/{month}/'
+    out_dir: '/work/opa/ls15717/mvr/ts/fc_0/'
+  fc_1:
+    filename: 't_{date}_dm_CMCC_BSEAS4_BLKSEA_b{p_date}_fc12-v02.nc'
+    fcday: 0
+    in_dir: '/data/products/BSFS/bsfs_v4.1/bulletin/fc/f{p_date}/'
+    out_dir: '/work/opa/ls15717/mvr/ts/fc_1/'
+  fc_3:
+    filename: 't_{date}_dm_CMCC_BSEAS4_BLKSEA_b{p_date}_fc12-v02.nc'
+    fcday: 2
+    in_dir: '/data/products/BSFS/bsfs_v4.1/bulletin/fc/f{p_date}/'
+    out_dir: '/work/opa/ls15717/mvr/ts/fc_3/'
+  fc_5:
+    filename: 't_{date}_dm_CMCC_BSEAS4_BLKSEA_b{p_date}_fc12-v02.nc'
+    fcday: 4
+    in_dir: '/data/products/BSFS/bsfs_v4.1/bulletin/fc/f{p_date}/'
+    out_dir: '/work/opa/ls15717/mvr/ts/fc_5/'
+
+intermediate:
+  in_file: '/work/opa/ls15717/mvr/intermediate/{mod_type}_{obs_type}_{date}.nc'
+  out_file: '/work/opa/ls15717/mvr/intermediate/mvr_{mod_type}_{obs_type}_{date}.nc'
+  mdt: '/users_home/opa/ls15717/mvr_new/data/MDT_new.nc'

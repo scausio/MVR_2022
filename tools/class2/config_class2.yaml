@@ -1,0 +1,100 @@
+general:
+  obs: '/data/inputs/metocean/historical/obs/in_situ/monthly/BlackSea/multiparameter/mooring/{ref_date}/BS_TS_MO_{plat_name}_{ref_date}.nc'
+  bs: '/work/opa/ls15717/mvr/ts/fc_{i}/{ref_date}*_h-CMCC--{var_name}-BSeas4-BS-b*_an-sv10.00.nc'
+  plot: '/work/opa/ls15717/mvr/class2/{plat_name}_{ref_date}_{var_name}.png'
+  out_file: '/work/opa/ls15717/mvr/class2/{plat_name}_MOD_TS_BSMFC-PU_{ref_date}_{var_name}.nc'
+
+common_vars:
+  depth: &depth
+    datatype: f
+    coords: depth
+    varAttributes:
+      axis: "Z"
+      _CoordinateAxisType: "Height"
+      _CoordinateZisPositive: "down"
+      standard_name: "depth"
+      long_name: "Depth"
+      units: "m"
+      unit_long: "Meters"
+  forecasts: &forecasts
+    datatype: f
+    coords: forecasts
+    varAttributes:
+      long_name: "forecast lead time"
+      units: "hours"
+    value:
+      - 12
+  time: &time
+    datatype: double
+    coords: time
+    varAttributes:
+      standard_name: "time"
+      long_name: "time"
+      #units: "seconds since 1970-01-01 00:00:00"
+      #calendar: "standard"
+      axis: "T"
+      _CoordinateAxisType: "Time"
+
+variables:
+  TEMP:
+    dims: [time, depth, forecasts]
+    vars:
+      depth: *depth
+      forecasts: *forecasts
+      time: *time
+      thetao:
+        datatype: f
+        coords: [ time, depth, forecasts ]
+        varAttributes:
+          coordinates: "time depth forecasts"
+          units: "degrees_C"
+          standard_name: "sea_water_potential_temperature"
+          long_name: "sea temperature"
+          valid_min: 4.
+          valid_max: 35.
+          comment: "closest model grid point"
+  PSAL:
+    dims: [ time, depth, forecasts ]
+    vars:
+      depth: *depth
+      forecasts: *forecasts
+      time: *time
+      so:
+        datatype: f
+        coords: [ time, depth, forecasts ]
+        varAttributes:
+          standard_name: "sea_water_salinity"
+          long_name: "salinity"
+          coordinates: "time depth forecasts"
+          valid_min: 6.
+          valid_max: 42.
+          units: 1e-3
+          comment: "closest model grid point"
+globalAttributes:
+  product: "BLKSEA_ANALYSIS_FORECAST_PHYS_007_001"
+  forecasts_units: "hours"
+  forecasts_value_-12: "Analysis-3DVAR"
+  contact: "servicedesk.cmems@mercator-ocean.eu"
+
+forecasts:
+  fc_0:
+    filename: '{date}_h-CMCC--*-BSeas4-BS-b*_an-sv10.00.nc'
+    fcday: an
+    in_dir: '/data/products/BSFS/bsfs_v4.1/analysis_hourly_means/{year}/{month}/'
+    out_dir: '/work/opa/ls15717/mvr/ts/fc_0/'
+  fc_1:
+    filename: '{date}_h-CMCC--*-BSeas4-BS-b{p_date}_an-fc10.00.nc'
+    fcday: 0
+    in_dir: '/data/products/BSFS/bsfs_v4.1/bulletin/fc/f{p_date}/'
+    out_dir: '/work/opa/ls15717/mvr/ts/fc_1/'
+  fc_3:
+    filename: '{date}_h-CMCC--*-BSeas4-BS-b{p_date}_an-fc10.00.nc'
+    fcday: 2
+    in_dir: '/data/products/BSFS/bsfs_v4.1/bulletin/fc/f{p_date}/'
+    out_dir: '/work/opa/ls15717/mvr/ts/fc_3/'
+  fc_5:
+    filename: '{date}_h-CMCC--*-BSeas4-BS-b{p_date}_an-fc10.00.nc'
+    fcday: 4
+    in_dir: '/data/products/BSFS/bsfs_v4.1/bulletin/fc/f{p_date}/'
+    out_dir: '/work/opa/ls15717/mvr/ts/fc_5/'
+

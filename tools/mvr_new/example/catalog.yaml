@@ -1,0 +1,150 @@
+metadata:
+  version: 1
+sources:
+  argo:
+    description: ARGO profiles
+    driver: pqtool.drivers.ArgoSource
+    metadata:
+      coords:
+        latitude: LATITUDE
+        longitude: LONGITUDE 
+        depth: DEPTH 
+        time: TIME
+        dc_reference: DC_REFERENCE
+      variables:
+        temperature: TEMP
+        temperature_qc: TEMP_QC
+        salinity: PSAL
+        salinity_qc: PSAL_QC
+        pressure_qc: PRES_QC
+        time_qc: TIME_QC
+    args:
+      urlpath: '/data/inputs/metocean/historical/obs/in_situ/monthly/BlackSea/multiparameter/profiler-glider/{date:%Y%m}/GL_PR_PF_{platform_code:d}_{date:%Y%m}.nc'
+  sst:
+    description: L3S GHRSST nighttime subskin SST
+    driver: pqtool.drivers.SSTSource
+    metadata:
+      coords:
+        latitude: lat
+        longitude: lon
+        time: time
+      variables:
+        temperature: sea_surface_temperature
+        temperature_qc: quality_level
+    args:
+      urlpath: '/data/inputs/metocean/historical/obs/satellite/SST/CNR/L3/day/{date:%Y}/{date:%m}/{date:%Y%m%d}000000-GOS-L3S_GHRSST-SSTsubskin-night_SST_HR_NRT-BLK-v02.0-fv01.0.nc'
+  sla:
+    description: Sea Level Anomaly
+    driver: pqtool.drivers.SLASource
+    metadata:
+      coords:
+        latitude: latitude
+        longitude: longitude
+        time: time
+        cycle: cycle
+        track: track
+      variables:
+        sla: sla_filtered
+    args:
+      urlpath: '/data/inputs/metocean/shared_MedBS/SLA_EIS_202112/nrt_{region}_{satellite}_phy_l3_{date:%Y%m%d}.nc'
+
+  fc_0:
+    driver: pqtool.drivers.NemoSource
+    metadata:
+      coords:
+        latitude: nav_lat
+        longitude: nav_lon
+        depth: deptht
+        time: time_counter
+      variables:
+        temperature: thetao
+        salinity: so
+        ssh: zos
+    args:
+      urlpath: '/work/opa/ls15717/mvr/ts/fc_0/t_{date:%Y%m%d}_dm_CMCC_BSEAS4_BLKSEA_b{buldate}_an12-v02.nc'
+  fc_0:
+    driver: pqtool.drivers.NemoSource
+    metadata:
+      coords:
+        latitude: nav_lat
+        longitude: nav_lon
+        depth: deptht
+        time: time_counter
+      variables:
+        temperature: thetao
+        salinity: so
+        ssh: zos
+    args:
+      urlpath: '/work/opa/ls15717/mvr/ts/fc_0/t_{date:%Y%m%d}_dm_CMCC_BSEAS4_BLKSEA_b{buldate}_an12-v02.nc'
+  fc_1:
+    driver: pqtool.drivers.NemoSource
+    metadata:
+      coords:
+        latitude: nav_lat
+        longitude: nav_lon
+        depth: deptht
+        time: time_counter
+      variables:
+        temperature: thetao
+        salinity: so
+        ssh: zos
+    args:
+      urlpath: '/work/opa/ls15717/mvr/ts/fc_1/t_{date:%Y%m%d}_dm_CMCC_BSEAS4_BLKSEA_b{buldate}_an12-v02.nc'
+  fc_3:
+    driver: pqtool.drivers.NemoSource
+    metadata:
+      coords:
+        latitude: nav_lat
+        longitude: nav_lon
+        depth: deptht
+        time: time_counter
+      variables:
+        temperature: thetao
+        salinity: so
+        ssh: zos
+    args:
+      urlpath: '/work/opa/ls15717/mvr/ts/fc_3/t_{date:%Y%m%d}_dm_CMCC_BSEAS4_BLKSEA_b{buldate}_an12-v02.nc'
+  fc_5:
+    driver: pqtool.drivers.NemoSource
+    metadata:
+      coords:
+        latitude: nav_lat
+        longitude: nav_lon
+        depth: deptht
+        time: time_counter
+      variables:
+        temperature: thetao
+        salinity: so
+        ssh: zos
+    args:
+      urlpath: '/work/opa/ls15717/mvr/ts/fc_5/t_{date:%Y%m%d}_dm_CMCC_BSEAS4_BLKSEA_b{buldate}_an12-v02.nc'
+  operational:
+    driver: pqtool.drivers.NemoSource
+    metadata:
+      coords:
+        latitude: nav_lat
+        longitude: nav_lon
+        depth: deptht
+        time: time_counter
+      variables:
+        temperature: votemper
+        salinity: vosaline
+    args:
+      urlpath: '/work/tessa_gpfs2/bsfs/bsfs_v3.2/RESULTS/rASIS/rebuild/a{refdate:%Y%m%d}/t_{date:%Y%m%d}_dm_CMCC_BSFS1b_BLKSEA_b{buldate}_an12-v01.nc'
+
+  shyfem:
+    driver: pqtool.drivers.ShyfemSource
+    metadata:
+      coords:
+        latitude: latitude
+        longitude: longitude
+        depth: total_depth
+        time: time
+      variables:
+        latitude: latitude
+        longitude: longitude
+        depth: total_depth
+        temperature: temperature
+        salinity: salinity
+    args:
+      urlpath: '/Users/lstefanizzi/PycharmProjects/v2-refactor/data/shyfem/{date:%Y%m%d}_ses_test_rivers3b_ihwadv2_Pr1_upwind_chunk_{chunk}.nos.nc'

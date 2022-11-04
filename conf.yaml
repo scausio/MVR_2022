@@ -1,0 +1,240 @@
+base:
+  pq_path: '/work/opa/bsfs-dev/MVR_2022/tools/mvr_new/'
+  proj_code: '0512'
+  mesh_mask: '/work/opa/bsfs-dev/MVR_2022/auxiliary_data/mesh_mask_BS-PHD.nc'
+  interm_path: '/work/opa/bsfs-dev/MVR_2022/observations/'
+  mdt: '/work/opa/bsfs-dev/MVR_2022/auxiliary_data/MDT_new.nc'
+  output: '/work/opa/bsfs-dev/MVR_2022/output/'
+  logs: "/work/opa/bsfs-dev/MVR_2022/logs"
+  forecast_idxs: ["0", "1", "3", "5"]
+  product: "BLKSEA_ANALYSISFORECAST_PHY_007_001"
+
+Class_4:
+  outname_tmpl: 'product_quality_stats_BLKSEA_ANALYSISFORECAST_PHY_007_001_{start_date}_{end_date}.nc'
+  dimensions:
+    areas: 1
+    string_length: 21
+    depths: 10
+    forecasts: 4
+    metrics: 7
+    time: 0
+    surface: 1
+  variables:
+    area_names:
+      datatype: c
+      coords: [ areas, string_length ]
+      varAttributes:
+        long_name: "area names"
+        description: "region over which statistics are aggregated"
+      value:
+        - "Full domain          "
+    depths:
+      datatype: f
+      coords: depths
+      varAttributes:
+        long_name: "depths"
+        positive: "down"
+        units: "m"
+        description: "depth of the base of the vertical layer over which statistics are aggregated"
+      value:
+        - 5
+        - 10
+        - 20
+        - 30
+        - 50
+        - 75
+        - 100
+        - 200
+        - 500
+        - 1000
+    forecasts:
+      datatype: f
+      coords: forecasts
+      varAttributes:
+        long_name: "forecast lead time"
+        units: "hours"
+      value:
+        - 0
+        - 12
+        - 60
+        - 108
+    metric_names:
+      datatype: c
+      coords: [ metrics, string_length ]
+      varAttributes:
+        long_name: "metric names"
+      value:
+        - "number of data values"
+        - "mean of product      "
+        - "mean of reference    "
+        - "mean squared error   "
+        - "variance of product  "
+        - "variance of reference"
+        - "covariance           "
+    stats_salinity:
+      infile: '{output}/{ref_date}/mvr_cl4_argo_{mod_type}_{ref_date}.nc'
+      datatype: f
+      coords: [ time, forecasts, depths, metrics, areas ]
+      varAttributes:
+        parameter: "Salinity"
+        reference: "Profile observations from in-situ TAC"
+        units: "1e-3"
+    stats_sst:
+      infile: '{output}/{ref_date}/mvr_cl4_sst_{mod_type}_{ref_date}.nc'
+      datatype: f
+      coords: [ time, forecasts, surface, metrics, areas ]
+      varAttributes:
+        parameter: "Sea Surface Temperature"
+        reference: "SST L3 from OSI TAC"
+        units: "K"
+    stats_sla:
+      infile: '{output}/{ref_date}/mvr_cl4_sla_{mod_type}_{ref_date}.nc'
+      datatype: f
+      coords: [ time, forecasts, surface, metrics, areas ]
+      varAttributes:
+        parameter: "Sea Level Anomaly"
+        reference: "SLA along track from SLA TAC"
+        units: "cm"
+    stats_temperature:
+      infile: '{output}/{ref_date}/mvr_cl4_argo_{mod_type}_{ref_date}.nc'
+      datatype: f
+      coords: [ time, forecasts, depths, metrics, areas ]
+      varAttributes:
+        parameter: "Temperature"
+        reference: "Profile observations from in-situ TAC"
+        units: "K"
+    time:
+      datatype: f
+      coords: time
+      varAttributes:
+        long_name: "validity time"
+  forecasts:
+    fc_0:
+      filename: '{grid}_{date}_dm_CMCC_BSEAS4_BLKSEA_b{p_date}_an12-v02.nc'  #'{date}_d-CMCC--*-BSeas4-BS-b{p_date}*an-sv10.00.nc'
+      fcday: an
+      in_dir: '/data/products/BSFS/bsfs_v4.0/bulletin/an/a{p_date}/' #'/work/opa/bsfs/bsfs_v4.1/RESULTS/rASIS/rebuild/a{p_date}'
+      out_dir: '{output}/ts_cl4/fc_0/'
+    fc_1:
+      filename: '{grid}_{date}_dm_CMCC_BSEAS4_BLKSEA_b{p_date}_fc12-v02.nc'  #'{date}_d-CMCC--*-BSeas4-BS-b{p_date}*fc-sv10.00.nc'
+      fcday: 0
+      in_dir: '/data/products/BSFS/bsfs_v4.0/bulletin/fc/f{p_date}/' #'/work/opa/bsfs/bsfs_v4.1/RESULTS/rFCST/rebuild/f{p_date}/'
+      out_dir: '{output}/ts_cl4/fc_1/'
+    fc_3:
+      filename: '{grid}_{date}_dm_CMCC_BSEAS4_BLKSEA_b{p_date}_fc12-v02.nc'  #'{date}_d-CMCC--*-BSeas4-BS-b{p_date}*fc-sv10.00.nc'
+      fcday: 2
+      in_dir: '/data/products/BSFS/bsfs_v4.0/bulletin/fc/f{p_date}/' #'/work/opa/bsfs/bsfs_v4.1/RESULTS/rFCST/rebuild/f{p_date}/'
+      out_dir: '{output}/ts_cl4/fc_3/'
+    fc_5:
+      filename: '{grid}_{date}_dm_CMCC_BSEAS4_BLKSEA_b{p_date}_fc12-v02.nc'  # '{date}_d-CMCC--*-BSeas4-BS-b{p_date}*fc-sv10.00.nc'
+      fcday: 4
+      in_dir: '/data/products/BSFS/bsfs_v4.0/bulletin/fc/f{p_date}/' #'/work/opa/bsfs/bsfs_v4.1/RESULTS/rFCST/rebuild/f{p_date}/'
+      out_dir: '{output}/ts_cl4/fc_5/'
+
+
+Class_2:
+  outname_tmpl: '{plat_name}_MOD_TS_BSMFC-PU_{ref_date}_{var_name}.nc'
+  globalAttributes:
+    product: "{product}"
+    forecasts_units: "hours"
+    contact: "servicedesk.cmems@mercator-ocean.eu"
+    institution: "Centro Euro-Mediterraneo sui Cambiamenti Climatici - CMCC, Italy"
+    longitude_east: '{lon}'
+    latitude_north: '{lat}'
+    forecasts_value_-12: "Analysis-3DVAR"
+    forecasts_value_12: "FC01-FREE"
+    forecasts_value_60: "FC03-FREE"
+    forecasts_value_108: "FC05-FREE"
+  coordinates:
+    depth: &depth
+      values: [0]
+      datatype: f
+      coords: depth
+      varAttributes:
+        axis: "Z"
+        _CoordinateAxisType: "Height"
+        _CoordinateZisPositive: "down"
+        standard_name: "depth"
+        long_name: "Depth"
+        units: "m"
+        unit_long: "Meters"
+    forecasts: &forecasts
+      datatype: f
+      coords: forecasts
+      varAttributes:
+        long_name: "forecast lead time"
+        units: "hours"
+      fc_0: -12
+      fc_1: 12
+      fc_3: 60
+      fc_5: 108
+    time: &time
+      datatype: double
+      coords: time
+      varAttributes:
+        standard_name: "time"
+        long_name: "time"
+        #units: "seconds since 1970-01-01 00:00:00"
+        #calendar: "standard"
+        axis: "T"
+        _CoordinateAxisType: "Time"
+  variables:
+    TEMP:
+      platforms: ["EUXRo01", "EUXRo02", "EUXRo03", "15360", "15480", "15428", "15499", "15552", "15655", "15428"]
+      dims: [time, depth, forecasts]
+      vars:
+        depth: *depth
+        forecasts: *forecasts
+        time: *time
+        model_temperature:
+          outname: thetao
+          datatype: f
+          coords: [ time, depth, forecasts ]
+          varAttributes:
+            coordinates: "time depth forecasts"
+            units: "degrees_C"
+            standard_name: "sea_water_potential_temperature"
+            long_name: "sea temperature"
+            valid_min: 4.
+            valid_max: 35.
+            comment: "closest model grid point"
+    PSAL:
+      platforms: ["EUXRo01", "EUXRo02", "EUXRo03"]
+      dims: [ time, depth, forecasts ]
+      vars:
+        depth: *depth
+        forecasts: *forecasts
+        time: *time
+        model_salinity:
+          outname: so
+          datatype: f
+          coords: [ time, depth, forecasts ]
+          varAttributes:
+            standard_name: "sea_water_salinity"
+            long_name: "salinity"
+            coordinates: "time depth forecasts"
+            valid_min: 6.
+            valid_max: 42.
+            units: 1e-3
+            comment: "closest model grid point"
+  forecasts:
+    fc_0:
+      filename: '{grid}_{date}_hm_CMCC_BSEAS4_BLKSEA_b{p_date}_an12-v02.nc' #'{date}_h-CMCC--*-BSeas4-BS-b{p_date}*an-sv10.00.nc'
+      fcday: an
+      in_dir: '/data/products/BSFS/bsfs_v4.0/bulletin/an/a{p_date}/' #'/work/opa/bsfs/bsfs_v4.1/RESULTS/rASIS/rebuild/a{p_date}'
+      out_dir: '{output}/ts_cl2/fc_0/'
+    fc_1:
+      filename: '{grid}_{date}_hm_CMCC_BSEAS4_BLKSEA_b{p_date}_fc12-v02.nc'  #'{date}_h-CMCC--*-BSeas4-BS-b{p_date}*fc-sv10.00.nc'
+      fcday: 0
+      in_dir: '/data/products/BSFS/bsfs_v4.0/bulletin/fc/f{p_date}/'  #'/work/opa/bsfs/bsfs_v4.1/RESULTS/rFCST/rebuild/f{p_date}/'
+      out_dir: '{output}/ts_cl2/fc_1/'
+    fc_3:
+      filename: '{grid}_{date}_hm_CMCC_BSEAS4_BLKSEA_b{p_date}_fc12-v02.nc'  #'{date}_h-CMCC--*-BSeas4-BS-b{p_date}*fc-sv10.00.nc'
+      fcday: 2
+      in_dir: '/data/products/BSFS/bsfs_v4.0/bulletin/fc/f{p_date}/' #'/work/opa/bsfs/bsfs_v4.1/RESULTS/rFCST/rebuild/f{p_date}/'
+      out_dir: '{output}/ts_cl2/fc_3/'
+    fc_5:
+      filename: '{grid}_{date}_hm_CMCC_BSEAS4_BLKSEA_b{p_date}_fc12-v02.nc'  #'{date}_h-CMCC--*-BSeas4-BS-b{p_date}*fc-sv10.00.nc'
+      fcday: 4
+      in_dir: '/data/products/BSFS/bsfs_v4.0/bulletin/fc/f{p_date}/' #'/work/opa/bsfs/bsfs_v4.1/RESULTS/rFCST/rebuild/f{p_date}/'
+      out_dir: '{output}/ts_cl2/fc_5/'
+

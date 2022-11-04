@@ -1,0 +1,116 @@
+[DEFAULT]
+archive = /work/tessa_gpfs2/archive/historical
+rolling = /work/tessa_gpfs2/archive/rolling
+
+experiment = test
+
+region = blacksea
+
+#region = nw_shelf
+#region_longitude = 27., 34.
+#region_latitude = 43., 47.
+
+#region = bosporus 
+#region_longitude = 27., 32.
+#region_latitude = 41., 43.
+
+#region = crimea_kerch
+#region_longitude = 32., 38.
+#region_latitude = 43.5., 46.
+
+#region = batumi
+#region_longitude = 38., 42.
+#region_latitude = 40.5, 45.
+
+#region = sinop
+#region_longitude = 31., 38.
+#region_latitude = 40.5, 43.
+
+[scheduler]
+remove-delay = 86400
+
+[input_data]
+# Location of input files, wildcards are permitted and variables (e.q. dates)
+# will be substituted at runtime using Python's str.format() syntax.
+satellite_sst = %(archive)s/obs/satellite/SST/CNR_GOS/AVHRR/day/{date:%%Y}/{date:%%m}/{date:%%Y%%m%%d}000000-GOS-L3S_GHRSST-SSTsubskin-night_SST_HR_NRT-BLK-*.nc
+
+satellite_alt = %(rolling)s/raw/ocean/CLS/obs/altimetry/{satellite}/{production_date:%%Y%%m%%d}/nrt_blacksea_*_phy_vfec_l3_{date:%%Y%%m%%d}_{production_date:%%Y%%m%%d}.nc
+insitu = %(archive)s/obs/in_situ/latest/{date:%%Y%%m%%d}/GL_LATEST_PR_PF_*_{date:%%Y%%m%%d}.nc
+model = %(archive)s/model/ocean/CMCC/CMEMS/analysis/1h/{date:%%Y}/{date:%%Y%%m%%d}_h-CMCC--{subset}-BSeas3-BS-*.nc
+
+# Altimetry gets updated many times, this is the number of days in the future
+# to search for the most up-to-date file.
+reprocessing_delay = 30
+
+# Satellite names substituted in the satellite_alt variable above.
+altimetry_satellites = AltiKa, Cryosat-2, Jason-2, Jason-3, Sentinel-3A, Sentinel-3B
+
+# Substituted in the model filename to obtain the different data files.
+subset_amxl = AMXL
+subset_aslv = ASLV
+subset_psal = PSAL
+subset_rfvl = RFVL
+subset_temp = TEMP
+
+# Interpolation method used for all input data (e.g. nearest or linear)
+interpolation_method = nearest
+ignore_missing = true
+
+[output_data]
+figure_path = output/%(experiment)s/%(region)s/figures
+figure_format = png
+data_path = output/%(experiment)s/%(region)s/data
+
+[metrics]
+# Definition of layers to visualise profile bias/RMSD.
+layers = 2, 5, 10, 20, 30, 50, 75, 100, 200, 500, 1000
+sst_foundation_depth = 2.502
+
+# Quality flags to require for different data types.
+sst_quality = 4, 5
+insitu_quality = 1, 2
+
+# Mean Dynamic Topography
+mdt = data/MDT.nc
+
+# Mesh mask
+mesh_mask = data/mesh_mask_bs.nc
+
+[visualisation]
+# GSHHS coastline shapefile to use for the mercator package.
+coastline = blacksea_h.shp
+bathymetry = data/bathy_meter.nc
+
+# Depth levels to visualise in the visualisation tasks.
+depth_levels = 3, 5, 10, 20, 30, 50, 75, 100, 200, 500, 1000
+
+# Combine bias/RMSD D(aily), W(eekly), M(onthly) or Y(early)
+frequency = D
+
+[TemperatureProfileComparison]
+maximum_difference = 4
+
+# Interpolate model to these levels before comparing to profile
+#model_levels = 2.5010786, 7.5111933, 12.536196, 17.583405, 22.663736, 27.793465, 32.996857, 38.310074, 43.786976, 49.50773, 55.591507, 62.215195, 69.64064, 78.25402, 88.6217, 101.56744, 118.27473, 140.41339, 170.27762, 210.89946, 266.06668, 340.13943, 437.56604, 562.0992, 715.91516, 899.0139, 1109.2192, 1342.7784, 1595.243, 1862.2532, 2140.0208
+
+[SalinityProfileComparison]
+#maximum_difference = 3
+
+[SatelliteSSTComparison]
+#maximum_difference = 4
+
+[SatelliteSLAComparison]
+#maximum_difference = 0.05
+
+[ModelData]
+#add_extra_days_before = 0
+#add_extra_days_after = 0
+#time_offset = -43200
+#fix_coordinates = true
+
+[Transects]
+locations = 31E, 44N, 43N, 38E, 34E
+
+[Visualisation]
+extra_diagnostics = true
+
